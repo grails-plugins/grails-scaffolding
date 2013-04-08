@@ -16,8 +16,6 @@
 
 import grails.util.GrailsNameUtils
 
-import org.codehaus.groovy.grails.scaffolding.DefaultGrailsTemplateGenerator
-
 /**
  * Generates a CRUD controller and matching views for a given domain class
  *
@@ -76,7 +74,9 @@ target(uberGenerate: "Generates controllers and views for all domain classes.") 
 }
 
 void generateForDomainClass(domainClass) {
-	def templateGenerator = new DefaultGrailsTemplateGenerator(classLoader)
+	def DefaultGrailsTemplateGenerator = classLoader.loadClass('org.codehaus.groovy.grails.scaffolding.DefaultGrailsTemplateGenerator')
+
+	def templateGenerator = DefaultGrailsTemplateGenerator.newInstance(classLoader)
 	templateGenerator.grailsApplication = grailsApp
 	templateGenerator.pluginManager = pluginManager
 	if (generateViews) {
