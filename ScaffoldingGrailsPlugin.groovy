@@ -48,7 +48,7 @@ class ScaffoldingGrailsPlugin {
 	String documentation = 'http://grails.org/plugin/scaffolding'
 
 	def observe = ['controllers', 'domainClass']
-	def loadAfter = ['controllers']
+	def loadAfter = ['controllers', 'groovyPages']
 
 	String license = 'APACHE'
 //	def issueManagement = [system: 'JIRA', url: 'http://jira.grails.org/browse/TODO']
