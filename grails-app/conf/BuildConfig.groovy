@@ -2,10 +2,7 @@ grails.project.work.dir = 'target'
 
 grails.project.dependency.resolution = {
 
-	inherits 'global', {
-		// TODO remove
-		excludes 'grails-crud', 'grails-plugin-scaffolding'
-	}
+	inherits 'global'
 	log 'warn'
 
 	repositories {

@@ -37,7 +37,7 @@ class ScaffoldingGrailsPlugin {
 
 	private Logger log = LoggerFactory.getLogger(getClass())
 
-	String version = '1.0.BUILD-SNAPSHOT'
+	String version = '1.0.0'
 	String grailsVersion = '2.3 > *'
 	def pluginExcludes = ['grails-app/domain/**']
 
