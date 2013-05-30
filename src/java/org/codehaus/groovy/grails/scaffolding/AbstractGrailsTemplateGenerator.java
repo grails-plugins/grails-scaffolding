@@ -60,7 +60,7 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 	protected SimpleTemplateEngine engine = new SimpleTemplateEngine();
 	protected ResourceLoader resourceLoader;
 	protected Template renderEditorTemplate;
-	protected String domainSuffix = "Instance";
+	protected String domainSuffix = "";
 	protected GrailsPluginManager pluginManager;
 	protected GrailsApplication grailsApplication;
 
