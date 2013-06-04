@@ -175,12 +175,12 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 	}
 
 	public void generateTest(GrailsDomainClass domainClass, String destDir) throws IOException {
-		File destFile = new File(destDir, domainClass.getPackageName().replace('.', '/') + '/' + domainClass.getShortName() + "ControllerTests.groovy");
+		File destFile = new File(destDir, domainClass.getPackageName().replace('.', '/') + '/' + domainClass.getShortName() + "ControllerSpec.groovy");
 		if (!canWrite(destFile)) {
 			return;
 		}
 
-		String templateText = getTemplateText("Test.groovy");
+		String templateText = getTemplateText("Spec.groovy");
 
 		Map<String, Object> binding = createBinding(domainClass);
 		binding.put("packageName", domainClass.getPackageName());
