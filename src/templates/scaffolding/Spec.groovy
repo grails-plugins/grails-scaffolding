@@ -35,7 +35,7 @@ class ${className}ControllerSpec extends Specification {
     void "Test the save action correctly persists an instance"() {
 
         when:"The save action is executed with an invalid instance"
-            def ${propertyName}= new ${className}(title: '')
+            def ${propertyName}= new ${className}()
             ${propertyName}.validate()
             controller.save(${propertyName})
 
