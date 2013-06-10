@@ -31,6 +31,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.codehaus.groovy.grails.commons.GrailsDomainClass;
 import org.codehaus.groovy.grails.commons.GrailsDomainClassProperty;
@@ -40,8 +42,6 @@ import org.codehaus.groovy.grails.plugins.GrailsPluginUtils;
 import org.codehaus.groovy.grails.plugins.PluginManagerAware;
 import org.codehaus.groovy.runtime.IOGroovyMethods;
 import org.codehaus.groovy.runtime.StringGroovyMethods;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.AbstractResource;
 import org.springframework.core.io.FileSystemResource;
@@ -53,7 +53,7 @@ import org.springframework.util.StringUtils;
 
 public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateGenerator, ResourceLoaderAware, PluginManagerAware {
 
-	protected final Logger log = LoggerFactory.getLogger(getClass());
+	protected static final Log log = LogFactory.getLog(AbstractGrailsTemplateGenerator.class);
 
 	protected String basedir = ".";
 	protected boolean overwrite = false;
@@ -77,7 +77,8 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 		}
 
 		for (String name : getTemplateNames()) {
-			log.info("Generating {} view for domain class [{}]", new Object[] { name, domainClass.getFullName() });
+            if(log.isInfoEnabled())
+			    log.info("Generating ["+name+"] view for domain class ["+domainClass.getFullName()+"]");
 			generateView(domainClass, name, viewsDir.getAbsolutePath());
 		}
 	}
@@ -114,11 +115,48 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 				IOGroovyMethods.closeQuietly(writer);
 			}
 
-			log.info("Controller generated at {}", destFile);
+			log.info("Controller generated at ["+destFile+"]");
 		}
 	}
 
-	public void generateView(GrailsDomainClass domainClass, String viewName, Writer out) throws IOException {
+    @Override
+    public void generateAsyncController(GrailsDomainClass domainClass, String destDir) throws IOException {
+        Assert.hasText(destDir, "Argument [destdir] not specified");
+
+        if (domainClass == null) {
+            return;
+        }
+
+        String fullName = domainClass.getFullName();
+        String pkg = "";
+        int pos = fullName.lastIndexOf('.');
+        if (pos != -1) {
+            // Package name with trailing '.'
+            pkg = fullName.substring(0, pos + 1);
+        }
+
+        File destFile = new File(destDir, "grails-app/controllers/" + pkg.replace('.', '/') + domainClass.getShortName() + "Controller.groovy");
+        if (canWrite(destFile)) {
+            destFile.getParentFile().mkdirs();
+
+            BufferedWriter writer = null;
+            try {
+                writer = new BufferedWriter(new FileWriter(destFile));
+                generateAsyncController(domainClass, writer);
+                try {
+                    writer.flush();
+                }
+                catch (IOException ignored) {}
+            }
+            finally {
+                IOGroovyMethods.closeQuietly(writer);
+            }
+
+            log.info("Controller generated at ["+destFile+"]");
+        }
+    }
+
+    public void generateView(GrailsDomainClass domainClass, String viewName, Writer out) throws IOException {
 		String templateText = getTemplateText(viewName + ".gsp");
 
 		if (!StringUtils.hasLength(templateText)) {
@@ -173,6 +211,16 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 
 		generate(templateText, binding, out);
 	}
+
+    public void generateAsyncController(GrailsDomainClass domainClass, Writer out) throws IOException {
+        String templateText = getTemplateText("AsyncController.groovy");
+
+        Map<String, Object> binding = createBinding(domainClass);
+        binding.put("packageName", domainClass.getPackageName());
+        binding.put("propertyName", getPropertyName(domainClass));
+
+        generate(templateText, binding, out);
+    }
 
 	public void generateTest(GrailsDomainClass domainClass, String destDir) throws IOException {
 		File destFile = new File(destDir, domainClass.getPackageName().replace('.', '/') + '/' + domainClass.getShortName() + "ControllerSpec.groovy");
@@ -306,7 +354,7 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 				resources.addAll(extractNames(resolver.getResources("file:" + templatesDirPath + "/*.gsp")));
 			}
 			catch (Exception e) {
-				log.info("Error while loading views from " + basedir, e);
+				log.error("Error while loading views from " + basedir, e);
 			}
 		}
 
@@ -316,7 +364,7 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 		}
 		catch (Exception e) {
 			// ignore
-			log.debug("Error locating templates from " + pluginDir + ": " + e.getMessage(), e);
+			log.error("Error locating templates from " + pluginDir + ": " + e.getMessage(), e);
 		}
 
 		return resources;
@@ -340,7 +388,8 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 	}
 
 	public void setResourceLoader(ResourceLoader rl) {
-		log.info("Scaffolding template generator set to use resource loader {}", rl);
+        if(log.isInfoEnabled())
+		    log.info("Scaffolding template generator set to use resource loader ["+rl+"]");
 		resourceLoader = rl;
 	}
 

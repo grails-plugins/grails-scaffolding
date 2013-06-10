@@ -28,8 +28,10 @@ import org.springframework.util.Assert;
  * places the id first.
  *
  * @author Graeme Rocher
+ * @deprecated Use org.codehaus.groovy.grails.validation.DomainClassPropertyComparator instead
  */
 @SuppressWarnings("rawtypes")
+@Deprecated
 public class DomainClassPropertyComparator implements Comparator {
 
 	private Map constrainedProperties;

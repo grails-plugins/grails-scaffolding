@@ -1,6 +1,7 @@
 <%=packageName ? "package ${packageName}\n\n" : ''%>
 
 import grails.transaction.*
+import static org.springframework.http.HttpStatus.*
 
 @Transactional(readOnly = true)
 class ${className}Controller {
@@ -23,7 +24,7 @@ class ${className}Controller {
     @Transactional
     def save(${className} ${propertyName}) {
         if(${propertyName}.hasErrors()) {
-            respond ${propertyName}.errors, view:'create' // STATUS CODE 422
+            respond ${propertyName}.errors, view:'create'
         }
         else {
             ${propertyName}.save flush:true
@@ -32,7 +33,7 @@ class ${className}Controller {
                     flash.message = message(code: 'default.created.message', args: [message(code: '${propertyName}.label', default: '${className}'), ${propertyName}.id])
                     redirect ${propertyName}
                 }
-                '*' { render status:201 }
+                '*' { render status: CREATED }
             }
         }
     }
@@ -47,7 +48,7 @@ class ${className}Controller {
             render status:404
         }
         else if(${propertyName}.hasErrors()) {
-            respond ${propertyName}.errors, view:'edit' // STATUS CODE 422
+            respond ${propertyName}.errors, view:'edit'
         }
         else {
             ${propertyName}.save flush:true
@@ -56,7 +57,7 @@ class ${className}Controller {
                     flash.message = message(code: 'default.updated.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
                     redirect ${propertyName} 
                 }
-                '*'{ render status:200 }
+                '*'{ render status: NOT_FOUND }
             }
         }        
     }
@@ -70,11 +71,11 @@ class ${className}Controller {
                     flash.message = message(code: 'default.deleted.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
                     redirect action:"index", method:"GET" 
                 }
-                '*'{ render status:204 } // NO CONTENT STATUS CODE  
+                '*'{ render status: NO_CONTENT }
             }                
         }
         else {
-            render status:404
+            render status: NOT_FOUND
         }
     }
 }

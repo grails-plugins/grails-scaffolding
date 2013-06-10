@@ -24,12 +24,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.grails.web.pages.GroovyPageTemplate;
 import org.codehaus.groovy.grails.web.pages.GroovyPagesTemplateEngine;
 import org.codehaus.groovy.grails.web.servlet.view.GroovyPageView;
 import org.codehaus.groovy.grails.web.sitemesh.GrailsLayoutDecoratorMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 /**
@@ -41,7 +41,7 @@ import org.springframework.util.Assert;
 public class ScaffoldedGroovyPageView extends GroovyPageView {
 
 	private String contents;
-	protected final Logger log = LoggerFactory.getLogger(getClass());
+	protected static final Log log = LogFactory.getLog(ScaffoldedGroovyPageView.class);
 
 	public ScaffoldedGroovyPageView(String uri, String contents) {
 		Assert.hasLength(contents, "Argument [contents] cannot be blank or null");
@@ -76,7 +76,8 @@ public class ScaffoldedGroovyPageView extends GroovyPageView {
 	protected void renderWithTemplateEngine(GroovyPagesTemplateEngine templateEngine, Map model,
 			HttpServletResponse response, HttpServletRequest request) throws IOException {
 
-		log.debug("Rendering scaffolded view [{}] with model [{}]", new Object[] { getUrl(), model });
+        if(log.isDebugEnabled())
+		    log.debug("Rendering scaffolded view ["+getUrl()+"] with model ["+model+"]");
 
 		request.setAttribute(GrailsLayoutDecoratorMapper.RENDERING_VIEW, Boolean.TRUE);
 		Writable w = template.make(model);

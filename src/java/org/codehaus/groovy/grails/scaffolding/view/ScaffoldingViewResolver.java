@@ -23,14 +23,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.grails.commons.GrailsDomainClass;
 import org.codehaus.groovy.grails.scaffolding.GrailsTemplateGenerator;
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest;
 import org.codehaus.groovy.grails.web.servlet.view.GrailsViewResolver;
 import org.codehaus.groovy.grails.web.servlet.view.GroovyPageView;
 import org.codehaus.groovy.grails.web.util.WebUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.View;
 
@@ -47,7 +47,7 @@ public class ScaffoldingViewResolver extends GrailsViewResolver {
 	Map<String, GrailsDomainClass> scaffoldedDomains = Collections.emptyMap();
 
 	static final Map<ViewKey, View> scaffoldedViews = new ConcurrentHashMap<ViewKey, View>();
-	protected final Logger log = LoggerFactory.getLogger(getClass());
+	protected static final Log log = LogFactory.getLog(ScaffoldingViewResolver.class);
 
 	/**
 	 * Clears any cached scaffolded views.

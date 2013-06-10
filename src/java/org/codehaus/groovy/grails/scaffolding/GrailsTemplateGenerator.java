@@ -50,6 +50,13 @@ public interface GrailsTemplateGenerator {
 	 */
 	void generateController(GrailsDomainClass domainClass, String destDir) throws IOException;
 
+    /**
+     * Generates a controller for the supplied domain class.
+     * @param domainClass The DomainClass to generate views for
+     * @param destDir The destination directory to generate views to
+     */
+    void generateAsyncController(GrailsDomainClass domainClass, String destDir) throws IOException;
+
 	/**
 	 * Whether the generator should overwrite existing files (defaults to false).
 	 *
