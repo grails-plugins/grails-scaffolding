@@ -222,34 +222,44 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
         generate(templateText, binding, out);
     }
 
+    @Override
+    public void generateAsyncTest(GrailsDomainClass domainClass, String destDir) throws IOException {
+        generateTest(domainClass, destDir, "AsyncSpec.groovy");
+    }
+
 	public void generateTest(GrailsDomainClass domainClass, String destDir) throws IOException {
-		File destFile = new File(destDir, domainClass.getPackageName().replace('.', '/') + '/' + domainClass.getShortName() + "ControllerSpec.groovy");
-		if (!canWrite(destFile)) {
-			return;
-		}
-
-		String templateText = getTemplateText("Spec.groovy");
-
-		Map<String, Object> binding = createBinding(domainClass);
-		binding.put("packageName", domainClass.getPackageName());
-		binding.put("propertyName", domainClass.getLogicalPropertyName());
-
-		destFile.getParentFile().mkdirs();
-		BufferedWriter writer = null;
-		try {
-			writer = new BufferedWriter(new FileWriter(destFile));
-			generate(templateText, binding, writer);
-			try {
-				writer.flush();
-			}
-			catch (IOException ignored) {}
-		}
-		finally {
-			IOGroovyMethods.closeQuietly(writer);
-		}
+        generateTest(domainClass, destDir, "Spec.groovy");
 	}
 
-	protected Map<String, Object> createBinding(GrailsDomainClass domainClass) {
+    private void generateTest(GrailsDomainClass domainClass, String destDir, String templateName) throws IOException {
+        File destFile = new File(destDir, domainClass.getPackageName().replace('.', '/') + '/' + domainClass.getShortName() + "ControllerSpec.groovy");
+        if (!canWrite(destFile)) {
+            return;
+        }
+
+        String templateText = getTemplateText(templateName);
+
+        Map<String, Object> binding = createBinding(domainClass);
+        binding.put("packageName", domainClass.getPackageName());
+        binding.put("propertyName", domainClass.getLogicalPropertyName());
+
+        destFile.getParentFile().mkdirs();
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(destFile));
+            generate(templateText, binding, writer);
+            try {
+                writer.flush();
+            }
+            catch (IOException ignored) {}
+        }
+        finally {
+            IOGroovyMethods.closeQuietly(writer);
+        }
+    }
+
+
+    protected Map<String, Object> createBinding(GrailsDomainClass domainClass) {
 		boolean hasHibernate = pluginManager.hasGrailsPlugin("hibernate") || pluginManager.hasGrailsPlugin("hibernate4");
 
 		Map<String, Object> binding = new HashMap<String, Object>();

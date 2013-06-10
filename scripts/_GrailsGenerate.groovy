@@ -89,7 +89,7 @@ void generateForDomainClass(domainClass) {
     if (generateAsyncController ) {
         event("StatusUpdate", ["Generating controller for domain class ${domainClass.fullName}"])
         templateGenerator.generateAsyncController(domainClass, basedir)
-        templateGenerator.generateTest(domainClass, "${basedir}/test/unit")
+        templateGenerator.generateAsyncTest(domainClass, "${basedir}/test/unit")
         event("GenerateControllerEnd", [domainClass.fullName])
     }
     else if (generateController) {

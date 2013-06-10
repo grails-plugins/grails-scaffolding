@@ -92,4 +92,6 @@ public interface GrailsTemplateGenerator {
 	void generateController(GrailsDomainClass domainClass, Writer out) throws IOException;
 
 	void generateTest(GrailsDomainClass domainClass, String destDir) throws IOException;
+
+    void generateAsyncTest(GrailsDomainClass domainClass, String destDir) throws IOException;
 }
