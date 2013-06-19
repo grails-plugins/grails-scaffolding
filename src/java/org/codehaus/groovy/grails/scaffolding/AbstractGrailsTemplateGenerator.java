@@ -259,6 +259,7 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
     }
 
 
+    @SuppressWarnings("deprecation")
     protected Map<String, Object> createBinding(GrailsDomainClass domainClass) {
 		boolean hasHibernate = pluginManager.hasGrailsPlugin("hibernate") || pluginManager.hasGrailsPlugin("hibernate4");
 
