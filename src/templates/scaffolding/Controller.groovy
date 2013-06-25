@@ -28,7 +28,7 @@ class ${className}Controller {
         }
         else {
             ${propertyName}.save flush:true
-            withFormat {
+            request.withFormat {
                 html { 
                     flash.message = message(code: 'default.created.message', args: [message(code: '${propertyName}.label', default: '${className}'), ${propertyName}.id])
                     redirect ${propertyName}
@@ -52,12 +52,12 @@ class ${className}Controller {
         }
         else {
             ${propertyName}.save flush:true
-            withFormat {
+            request.withFormat {
                 html { 
                     flash.message = message(code: 'default.updated.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
                     redirect ${propertyName} 
                 }
-                '*'{ render status: NOT_FOUND }
+                '*'{ render status: OK }
             }
         }        
     }
