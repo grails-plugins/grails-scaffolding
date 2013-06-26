@@ -34,8 +34,8 @@ class ${className}Controller {
             }
             else {
                 ${propertyName}.save flush:true
-                withFormat {
-                    html {
+                request.withFormat {
+                    form {
                         flash.message = message(code: 'default.created.message', args: [message(code: '${propertyName}.label', default: '${className}'), ${propertyName}.id])
                         redirect ${propertyName}
                     }
@@ -65,8 +65,8 @@ class ${className}Controller {
                 respond ${propertyName}.errors, view:'edit' // STATUS CODE 422
             }
             else {
-                withFormat {
-                    html {
+                request.withFormat {
+                    form {
                         flash.message = message(code: 'default.updated.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
                         redirect ${propertyName}
                     }
@@ -83,8 +83,8 @@ class ${className}Controller {
             def ${propertyName}= ${className}.get(id)
             if(${propertyName}) {
                 ${propertyName}.delete flush:true
-                withFormat {
-                    html {
+                request.withFormat {
+                    form {
                         flash.message = message(code: 'default.deleted.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
                         redirect action:"index", method:"GET"
                     }

@@ -29,7 +29,7 @@ class ${className}Controller {
         else {
             ${propertyName}.save flush:true
             request.withFormat {
-                html { 
+                form { 
                     flash.message = message(code: 'default.created.message', args: [message(code: '${propertyName}.label', default: '${className}'), ${propertyName}.id])
                     redirect ${propertyName}
                 }
@@ -53,7 +53,7 @@ class ${className}Controller {
         else {
             ${propertyName}.save flush:true
             request.withFormat {
-                html { 
+                form { 
                     flash.message = message(code: 'default.updated.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
                     redirect ${propertyName} 
                 }
@@ -66,8 +66,8 @@ class ${className}Controller {
     def delete(${className} ${propertyName}) {
         if(${propertyName}) {
             ${propertyName}.delete flush:true
-            withFormat {
-                html { 
+            request.withFormat {
+                form { 
                     flash.message = message(code: 'default.deleted.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
                     redirect action:"index", method:"GET" 
                 }
