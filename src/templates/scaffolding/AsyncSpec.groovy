@@ -22,8 +22,8 @@ class ${className}ControllerSpec extends Specification {
             controller.index().get()
 
         then:"The model is correct"
-            !model.${propertyName}List
-            model.${propertyName}Count == 0
+            !model.${modelName}List
+            model.${modelName}Count == 0
     }
 
     void "Test the create action returns the correct model"() {
@@ -32,7 +32,7 @@ class ${className}ControllerSpec extends Specification {
 
 
         then:"The model is correctly created"
-            model.${propertyName}!= null
+            model.${modelName}!= null
     }
 
     void "Test the save action correctly persists an instance"() {
@@ -44,7 +44,7 @@ class ${className}ControllerSpec extends Specification {
 
 
         then:"The create view is rendered again with the correct model"
-            model.${propertyName}!= null
+            model.${modelName}!= null
             view == 'create'
 
         when:"The save action is executed with a valid instance"
@@ -55,7 +55,7 @@ class ${className}ControllerSpec extends Specification {
             controller.save(${propertyName}).get()
 
         then:"A redirect is issued to the show action"
-            response.redirectedUrl == '/${propertyName}/show/\$${propertyName}.id'
+            response.redirectedUrl == "/${propertyName}/show/\$${propertyName}.id"
             controller.flash.message != null
             ${className}.count() == 1
     }
@@ -75,7 +75,7 @@ class ${className}ControllerSpec extends Specification {
 
 
         then:"A model is populated containing the domain instance"
-            model.${propertyName}.id==${propertyName}.id
+            model.${modelName}.id==${propertyName}.id
     }
 
     void "Test that the edit action returns the correct model"() {
@@ -92,7 +92,7 @@ class ${className}ControllerSpec extends Specification {
 
 
         then:"A model is populated containing the domain instance"
-            model.${propertyName}.id==${propertyName}.id
+            model.${modelName}.id==${propertyName}.id
     }
 
 
@@ -113,7 +113,7 @@ class ${className}ControllerSpec extends Specification {
 
         then:"The edit view is rendered again with the invalid instance"
             view == 'edit'
-            model.${propertyName}.id==${propertyName}.id 
+            model.${modelName}.id==${propertyName}.id 
 
         when:"A valid domain instance is passed to the update action"
             response.reset()

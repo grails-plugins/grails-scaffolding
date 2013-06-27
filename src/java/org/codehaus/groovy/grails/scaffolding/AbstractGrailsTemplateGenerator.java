@@ -242,6 +242,7 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
         Map<String, Object> binding = createBinding(domainClass);
         binding.put("packageName", domainClass.getPackageName());
         binding.put("propertyName", domainClass.getLogicalPropertyName());
+        binding.put("modelName", getPropertyName(domainClass));
 
         destFile.getParentFile().mkdirs();
         BufferedWriter writer = null;

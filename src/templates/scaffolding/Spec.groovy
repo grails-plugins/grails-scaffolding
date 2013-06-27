@@ -20,8 +20,8 @@ class ${className}ControllerSpec extends Specification {
             controller.index()
 
         then:"The model is correct"
-            !model.${propertyName}List
-            model.${propertyName}Count == 0
+            !model.${modelName}List
+            model.${modelName}Count == 0
     }
 
     void "Test the create action returns the correct model"() {
@@ -29,7 +29,7 @@ class ${className}ControllerSpec extends Specification {
             controller.create()
 
         then:"The model is correctly created"
-            model.${propertyName}!= null
+            model.${modelName}!= null
     }
 
     void "Test the save action correctly persists an instance"() {
@@ -70,7 +70,7 @@ class ${className}ControllerSpec extends Specification {
 
 
         then:"A model is populated containing the domain instance"
-            model.${propertyName}==${propertyName} 
+            model.${modelName}==${propertyName} 
     }
 
     void "Test that the edit action returns the correct model"() {
@@ -87,7 +87,7 @@ class ${className}ControllerSpec extends Specification {
 
 
         then:"A model is populated containing the domain instance"
-            model.${propertyName}==${propertyName} 
+            model.${modelName}==${propertyName} 
     }
 
 
@@ -106,7 +106,7 @@ class ${className}ControllerSpec extends Specification {
 
         then:"The edit view is rendered again with the invalid instance"
             view == 'edit'
-            model.${propertyName}==${propertyName} 
+            model.${modelName}==${propertyName} 
 
         when:"A valid domain instance is passed to the update action"
             response.reset()
