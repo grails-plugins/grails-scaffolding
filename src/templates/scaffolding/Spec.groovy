@@ -40,7 +40,7 @@ class ${className}ControllerSpec extends Specification {
             controller.save(${propertyName})
 
         then:"The create view is rendered again with the correct model"
-            model.${propertyName}!= null
+            model.${modelName}!= null
             view == 'create'
 
         when:"The save action is executed with a valid instance"
