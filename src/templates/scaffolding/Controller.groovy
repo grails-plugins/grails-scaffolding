@@ -33,7 +33,7 @@ class ${className}Controller {
                     flash.message = message(code: 'default.created.message', args: [message(code: '${propertyName}.label', default: '${className}'), ${propertyName}.id])
                     redirect ${propertyName}
                 }
-                '*' { render status: CREATED }
+                '*' { respond ${propertyName}, [status: CREATED] }
             }
         }
     }
@@ -57,7 +57,7 @@ class ${className}Controller {
                     flash.message = message(code: 'default.updated.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
                     redirect ${propertyName} 
                 }
-                '*'{ render status: OK }
+                '*'{ respond ${propertyName}, [status: OK] }
             }
         }        
     }
