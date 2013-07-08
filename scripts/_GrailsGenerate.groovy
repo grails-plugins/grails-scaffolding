@@ -65,7 +65,7 @@ target(uberGenerate: "Generates controllers and views for all domain classes.") 
 		domainClasses = grailsApp.domainClasses
 	}
 
-	if (domainClasses) {
+	if (!domainClasses) {
 		event("StatusFinal", ["No domain classes found"])
 		return
 	}
