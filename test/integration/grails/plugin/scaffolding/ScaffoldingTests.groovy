@@ -45,7 +45,7 @@ class ScaffoldingTests extends GroovyTestCase {
 
 		assert text.contains('package grails.plugin.scaffolding')
 		assert text.contains('class ThingController {')
-		assert text.contains('thingInstanceList: Thing.list(params)')
+		assert text.contains('respond Thing.list(params), model:[thingCount: Thing.count()]')
 	}
 
 	void testGenerateViews() {
@@ -56,7 +56,7 @@ class ScaffoldingTests extends GroovyTestCase {
 		assert dir.exists()
 
 		def names = dir.list().sort()
-		assert ['_form.gsp', 'create.gsp', 'edit.gsp', 'list.gsp', 'show.gsp'] == names
+		assert ['_form.gsp', 'create.gsp', 'edit.gsp', 'index.gsp', 'show.gsp'] == names
 
 		String text = new File(dir, '_form.gsp').text
 
@@ -69,13 +69,13 @@ class ScaffoldingTests extends GroovyTestCase {
 		
 		generator.generateTest domainClass, generateDir.path
 		
-		File test = new File(generateDir, 'grails/plugin/scaffolding/ThingControllerTests.groovy')
+		File test = new File(generateDir, 'grails/plugin/scaffolding/ThingControllerSpec.groovy')
 		assert test.exists()
 
 		String text = test.text
 
 		assert text.contains('package grails.plugin.scaffolding')
-		assert text.contains('class ThingControllerTests {')
+		assert text.contains('class ThingControllerSpec extends Specification {')
 		assert text.contains('@TestFor(ThingController)')
 		assert text.contains('@Mock(Thing)')
 	}

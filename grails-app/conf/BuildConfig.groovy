@@ -11,6 +11,10 @@ grails.project.dependency.resolution = {
 		grailsCentral()
 	}
 
+    dependencies {
+        test "org.grails:grails-datastore-gorm-hibernate:2.0.0.M4"
+    }
+
 	plugins {
 		build ':release:3.0.0', ':rest-client-builder:1.0.3', {
 			export = false
