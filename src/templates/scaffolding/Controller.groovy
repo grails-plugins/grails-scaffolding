@@ -14,7 +14,7 @@ class ${className}Controller {
     }
 
     def show(${className} ${propertyName}) {
-        respond ${propertyName}
+        respond ${className}.get(params.id)
     }
 
     def create() {        
