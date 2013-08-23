@@ -1,7 +1,7 @@
 <%=packageName ? "package ${packageName}\n\n" : ''%>
 
-import grails.transaction.*
 import static org.springframework.http.HttpStatus.*
+import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class ${className}Controller {
@@ -23,18 +23,24 @@ class ${className}Controller {
 
     @Transactional
     def save(${className} ${propertyName}) {
-        if(${propertyName}.hasErrors()) {
-            respond ${propertyName}.errors, view:'create'
+        if (!${propertyName} == null) {
+            notFound()
+            return
         }
-        else {
-            ${propertyName}.save flush:true
-            request.withFormat {
-                form { 
-                    flash.message = message(code: 'default.created.message', args: [message(code: '${propertyName}.label', default: '${className}'), ${propertyName}.id])
-                    redirect ${propertyName}
-                }
-                '*' { respond ${propertyName}, [status: CREATED] }
+
+        if (${propertyName}.hasErrors()) {
+            respond ${propertyName}.errors, view:'create'
+            return
+        }
+
+        ${propertyName}.save flush:true
+
+        request.withFormat {
+            form { 
+                flash.message = message(code: 'default.created.message', args: [message(code: '${propertyName}.label', default: '${className}'), ${propertyName}.id])
+                redirect ${propertyName}
             }
+            '*' { respond ${propertyName}, [status: CREATED] }
         }
     }
 
@@ -44,39 +50,53 @@ class ${className}Controller {
 
     @Transactional
     def update(${className} ${propertyName}) {
-        if(${propertyName} == null) {
-            render status:404
+        if (${propertyName} == null) {
+            notFound()
+            return
         }
-        else if(${propertyName}.hasErrors()) {
+
+        if (${propertyName}.hasErrors()) {
             respond ${propertyName}.errors, view:'edit'
+            return
         }
-        else {
-            ${propertyName}.save flush:true
-            request.withFormat {
-                form { 
-                    flash.message = message(code: 'default.updated.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
-                    redirect ${propertyName} 
-                }
-                '*'{ respond ${propertyName}, [status: OK] }
+
+        ${propertyName}.save flush:true
+
+        request.withFormat {
+            form { 
+                flash.message = message(code: 'default.updated.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
+                redirect ${propertyName} 
             }
+            '*'{ respond ${propertyName}, [status: OK] }
         }        
     }
 
     @Transactional
     def delete(${className} ${propertyName}) {
-        if(${propertyName}) {
-            ${propertyName}.delete flush:true
-            request.withFormat {
-                form { 
-                    flash.message = message(code: 'default.deleted.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
-                    redirect action:"index", method:"GET" 
-                }
-                '*'{ render status: NO_CONTENT }
-            }                
+
+        if (!${propertyName}) {
+            notFound()
+            return
         }
-        else {
-            render status: NOT_FOUND
+
+        ${propertyName}.delete flush:true
+
+        request.withFormat {
+            form { 
+                flash.message = message(code: 'default.deleted.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
+                redirect action:"index", method:"GET" 
+            }
+            '*'{ render status: NO_CONTENT }
+        }                
+    }
+
+    protected void notFound() {
+        request.withFormat {
+            form { 
+                flash.message = message(code: 'default.not.found.message', args: [message(code: '${propertyName}.label', default: '${className}'), params.id])
+                redirect action: "index", method: "GET" 
+            }
+            '*'{ render status: NOT_FOUND }
         }
     }
 }
-
