@@ -76,10 +76,11 @@ public class ScaffoldedGroovyPageView extends GroovyPageView {
 	protected void renderWithTemplateEngine(GroovyPagesTemplateEngine templateEngine, Map model,
 			HttpServletResponse response, HttpServletRequest request) throws IOException {
 
-        if(log.isDebugEnabled())
-		    log.debug("Rendering scaffolded view ["+getUrl()+"] with model ["+model+"]");
+		if (log.isDebugEnabled()) {
+			log.debug("Rendering scaffolded view [" + getUrl() + "] with model [" + model + "]");
+		}
 
-		request.setAttribute(GrailsLayoutDecoratorMapper.RENDERING_VIEW, Boolean.TRUE);
+		request.setAttribute(GrailsLayoutDecoratorMapper.RENDERING_VIEW, true);
 		Writable w = template.make(model);
 		Writer out = null;
 		try {

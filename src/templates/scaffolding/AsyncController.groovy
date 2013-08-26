@@ -1,7 +1,7 @@
 <%=packageName ? "package ${packageName}\n\n" : ''%>
 
-import grails.transaction.*
 import static org.springframework.http.HttpStatus.*
+import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class ${className}Controller {
@@ -18,8 +18,8 @@ class ${className}Controller {
     }
 
     def show(Long id) {
-        ${className}.async.get(id).then { ${propertyName}->
-            respond ${propertyName} 
+        ${className}.async.get(id).then { ${propertyName} ->
+            respond ${propertyName}
         }
     }
 
@@ -42,21 +42,19 @@ class ${className}Controller {
                     '*' { respond ${propertyName}, [status: CREATED] }
                 }
             }
-
         }
     }
 
     def edit(Long id) {
-        ${className}.async.get(id).then { ${propertyName}->
-            respond ${propertyName} 
+        ${className}.async.get(id).then { ${propertyName} ->
+            respond ${propertyName}
         }
     }
 
     def update(Long id) {
-
         ${className}.async.withTransaction {
-            def ${propertyName}= ${className}.get(id)
-            if(${propertyName}== null) {
+            def ${propertyName} = ${className}.get(id)
+            if(${propertyName} == null) {
                 render status: NOT_FOUND
                 return
             }
@@ -73,14 +71,12 @@ class ${className}Controller {
                     '*'{ respond ${propertyName}, [status: OK] }
                 }
             }
-
         }
     }
 
-
     def delete(Long id) {
         ${className}.async.withTransaction {
-            def ${propertyName}= ${className}.get(id)
+            def ${propertyName} = ${className}.get(id)
             if(${propertyName}) {
                 ${propertyName}.delete flush:true
                 request.withFormat {
@@ -88,7 +84,7 @@ class ${className}Controller {
                         flash.message = message(code: 'default.deleted.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
                         redirect action:"index", method:"GET"
                     }
-                    '*'{ render status: NO_CONTENT } 
+                    '*'{ render status: NO_CONTENT }
                 }
             }
             else {
@@ -97,4 +93,3 @@ class ${className}Controller {
         }
     }
 }
-

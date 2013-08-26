@@ -11,6 +11,7 @@ class ${className}ControllerSpec extends Specification {
         assert params != null
         // TODO: Populate valid properties in order to make the test pass
     }
+
     def populateInvalidParams(params) {
         assert params != null
         // TODO: Populate properties that fail validation in order to make the test pass
@@ -30,7 +31,6 @@ class ${className}ControllerSpec extends Specification {
         when:"The create action is executed"
             controller.create()
 
-
         then:"The model is correctly created"
             model.${modelName}!= null
     }
@@ -41,7 +41,6 @@ class ${className}ControllerSpec extends Specification {
             def ${propertyName}= new ${className}()
             ${propertyName}.validate()
             controller.save(${propertyName}).get()
-
 
         then:"The create view is rendered again with the correct model"
             model.${modelName}!= null
@@ -73,7 +72,6 @@ class ${className}ControllerSpec extends Specification {
 
             controller.show(${propertyName}.id).get()
 
-
         then:"A model is populated containing the domain instance"
             model.${modelName}.id==${propertyName}.id
     }
@@ -90,11 +88,9 @@ class ${className}ControllerSpec extends Specification {
             def ${propertyName}= new ${className}(params).save(flush:true)
             controller.edit(${propertyName}?.id).get()
 
-
         then:"A model is populated containing the domain instance"
             model.${modelName}.id==${propertyName}.id
     }
-
 
     void "Test the update action performs an update on a valid domain instance"() {
         when:"Update is called for a domain instance that doesn't exist"
@@ -113,7 +109,7 @@ class ${className}ControllerSpec extends Specification {
 
         then:"The edit view is rendered again with the invalid instance"
             view == 'edit'
-            model.${modelName}.id==${propertyName}.id 
+            model.${modelName}.id==${propertyName}.id
 
         when:"A valid domain instance is passed to the update action"
             response.reset()
@@ -124,7 +120,6 @@ class ${className}ControllerSpec extends Specification {
         then:"A redirect is issues to the show action"
             response.redirectedUrl == "/${propertyName}/show/\$${propertyName}.id"
             flash.message != null
-
     }
 
     void "Test that the delete action deletes an instance if it exists"() {
@@ -139,7 +134,6 @@ class ${className}ControllerSpec extends Specification {
             populateValidParams(params)
             def ${propertyName}= new ${className}(params).save(flush: true)
 
-
         then:"It exists"
             ${className}.count() == 1
 
@@ -150,6 +144,5 @@ class ${className}ControllerSpec extends Specification {
             ${className}.count() == 0
             response.redirectedUrl == '/${propertyName}/index'
             flash.message != null
-
     }
 }

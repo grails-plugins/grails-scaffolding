@@ -7,7 +7,7 @@ import grails.transaction.Transactional
 class ${className}Controller {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
-    
+
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         respond ${className}.list(params), model:[${propertyName}Count: ${className}.count()]
@@ -17,7 +17,7 @@ class ${className}Controller {
         respond ${propertyName}
     }
 
-    def create() {        
+    def create() {
         respond new ${className}(params)
     }
 
@@ -36,7 +36,7 @@ class ${className}Controller {
         ${propertyName}.save flush:true
 
         request.withFormat {
-            form { 
+            form {
                 flash.message = message(code: 'default.created.message', args: [message(code: '${propertyName}.label', default: '${className}'), ${propertyName}.id])
                 redirect ${propertyName}
             }
@@ -44,8 +44,8 @@ class ${className}Controller {
         }
     }
 
-    def edit(${className} ${propertyName}) { 
-        respond ${propertyName}  
+    def edit(${className} ${propertyName}) {
+        respond ${propertyName}
     }
 
     @Transactional
@@ -63,12 +63,12 @@ class ${className}Controller {
         ${propertyName}.save flush:true
 
         request.withFormat {
-            form { 
+            form {
                 flash.message = message(code: 'default.updated.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
-                redirect ${propertyName} 
+                redirect ${propertyName}
             }
             '*'{ respond ${propertyName}, [status: OK] }
-        }        
+        }
     }
 
     @Transactional
@@ -82,19 +82,19 @@ class ${className}Controller {
         ${propertyName}.delete flush:true
 
         request.withFormat {
-            form { 
+            form {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: '${className}.label', default: '${className}'), ${propertyName}.id])
-                redirect action:"index", method:"GET" 
+                redirect action:"index", method:"GET"
             }
             '*'{ render status: NO_CONTENT }
-        }                
+        }
     }
 
     protected void notFound() {
         request.withFormat {
-            form { 
+            form {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: '${propertyName}.label', default: '${className}'), params.id])
-                redirect action: "index", method: "GET" 
+                redirect action: "index", method: "GET"
             }
             '*'{ render status: NOT_FOUND }
         }

@@ -13,7 +13,6 @@ class ${className}ControllerSpec extends Specification {
         //params["name"] = 'someValidName'
     }
 
-
     void "Test the index action returns the correct model"() {
 
         when:"The index action is executed"
@@ -35,7 +34,7 @@ class ${className}ControllerSpec extends Specification {
     void "Test the save action correctly persists an instance"() {
 
         when:"The save action is executed with an invalid instance"
-            def ${propertyName}= new ${className}()
+            def ${propertyName} = new ${className}()
             ${propertyName}.validate()
             controller.save(${propertyName})
 
@@ -45,8 +44,8 @@ class ${className}ControllerSpec extends Specification {
 
         when:"The save action is executed with a valid instance"
             response.reset()
-            populateValidParams(params)            
-            ${propertyName}= new ${className}(params)
+            populateValidParams(params)
+            ${propertyName} = new ${className}(params)
 
             controller.save(${propertyName})
 
@@ -65,12 +64,11 @@ class ${className}ControllerSpec extends Specification {
 
         when:"A domain instance is passed to the show action"
             populateValidParams(params)
-            def ${propertyName}= new ${className}(params)
+            def ${propertyName} = new ${className}(params)
             controller.show(${propertyName})
 
-
         then:"A model is populated containing the domain instance"
-            model.${modelName}==${propertyName} 
+            model.${modelName} == ${propertyName}
     }
 
     void "Test that the edit action returns the correct model"() {
@@ -82,14 +80,12 @@ class ${className}ControllerSpec extends Specification {
 
         when:"A domain instance is passed to the edit action"
             populateValidParams(params)
-            def ${propertyName}= new ${className}(params)
+            def ${propertyName} = new ${className}(params)
             controller.edit(${propertyName})
 
-
         then:"A model is populated containing the domain instance"
-            model.${modelName}==${propertyName} 
+            model.${modelName} == ${propertyName}
     }
-
 
     void "Test the update action performs an update on a valid domain instance"() {
         when:"Update is called for a domain instance that doesn't exist"
@@ -100,24 +96,23 @@ class ${className}ControllerSpec extends Specification {
 
         when:"An invalid domain instance is passed to the update action"
             response.reset()
-            def ${propertyName}= new ${className}()
+            def ${propertyName} = new ${className}()
             ${propertyName}.validate()
             controller.update(${propertyName})
 
         then:"The edit view is rendered again with the invalid instance"
             view == 'edit'
-            model.${modelName}==${propertyName} 
+            model.${modelName} == ${propertyName}
 
         when:"A valid domain instance is passed to the update action"
             response.reset()
             populateValidParams(params)
-            ${propertyName}= new ${className}(params).save(flush: true)
+            ${propertyName} = new ${className}(params).save(flush: true)
             controller.update(${propertyName})
 
         then:"A redirect is issues to the show action"
             response.redirectedUrl == "/${propertyName}/show/\$${propertyName}.id"
             flash.message != null
-
     }
 
     void "Test that the delete action deletes an instance if it exists"() {
@@ -130,7 +125,7 @@ class ${className}ControllerSpec extends Specification {
         when:"A domain instance is created"
             response.reset()
             populateValidParams(params)
-            def ${propertyName}= new ${className}(params).save(flush: true)
+            def ${propertyName} = new ${className}(params).save(flush: true)
 
         then:"It exists"
             ${className}.count() == 1
@@ -142,6 +137,5 @@ class ${className}ControllerSpec extends Specification {
             ${className}.count() == 0
             response.redirectedUrl == '/${propertyName}/index'
             flash.message != null
-
     }
 }

@@ -66,9 +66,9 @@ class ScaffoldingTests extends GroovyTestCase {
 	}
 
 	void testGenerateTest() {
-		
+
 		generator.generateTest domainClass, generateDir.path
-		
+
 		File test = new File(generateDir, 'grails/plugin/scaffolding/ThingControllerSpec.groovy')
 		assert test.exists()
 
