@@ -23,7 +23,7 @@ class ${className}Controller {
 
     @Transactional
     def save(${className} ${propertyName}) {
-        if (!${propertyName} == null) {
+        if (${propertyName} == null) {
             notFound()
             return
         }
@@ -74,7 +74,7 @@ class ${className}Controller {
     @Transactional
     def delete(${className} ${propertyName}) {
 
-        if (!${propertyName}) {
+        if (${propertyName} == null) {
             notFound()
             return
         }
