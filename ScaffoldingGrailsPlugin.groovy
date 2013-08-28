@@ -37,13 +37,13 @@ class ScaffoldingGrailsPlugin {
 
 	private Logger log = LoggerFactory.getLogger(getClass())
 
-	String version = '2.0.0.RC1'
+	String version = '2.0.0.RC2'
 	String grailsVersion = '2.3 > *'
 	def pluginExcludes = ['grails-app/domain/**']
 
 	String title = 'Grails Scaffolding Plugin'
 	String author = 'Burt Beckwith'
-	String authorEmail = 'beckwithb@vmware.com'
+	String authorEmail = 'bbeckwith@gopivotal.com'
 	String description = 'Handles the configuration of dynamic scaffolding'
 	String documentation = 'http://grails.org/plugin/scaffolding'
 
@@ -51,7 +51,7 @@ class ScaffoldingGrailsPlugin {
 	def loadAfter = ['controllers', 'groovyPages']
 
 	String license = 'APACHE'
-//	def issueManagement = [system: 'JIRA', url: 'http://jira.grails.org/browse/TODO']
+	def issueManagement = [system: 'JIRA', url: 'http://jira.grails.org/browse/GPSCAFFOLD']
 	def scm = [url: 'https://github.com/grails-plugins/grails-scaffolding']
 	def organization = [name: 'SpringSource', url: 'http://www.springsource.org/']
 
