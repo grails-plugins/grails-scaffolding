@@ -82,13 +82,13 @@ class ScaffoldingGrailsPlugin {
 			return
 		}
 
-		Thread.start {
-			try {
-				configureScaffolding ctx, application
-			}
-			catch (e) {
-				log.error "Error configuration scaffolding: $e.message", e
-			}
+		try {
+            log.info "configuring scaffolding..."
+			configureScaffolding ctx, application
+            log.info "done configuring scaffolding."
+		}
+		catch (e) {
+			log.error "Error configuration scaffolding: $e.message", e
 		}
 	}
 
