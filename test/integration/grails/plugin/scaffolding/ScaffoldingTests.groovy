@@ -1,12 +1,15 @@
 package grails.plugin.scaffolding
 
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
 import grails.util.BuildSettingsHolder
 
 import org.codehaus.groovy.grails.commons.GrailsDomainClass
 import org.codehaus.groovy.grails.scaffolding.DefaultGrailsTemplateGenerator
 import org.codehaus.groovy.grails.scaffolding.GrailsTemplateGenerator
 
-class ScaffoldingTests extends GroovyTestCase {
+@TestMixin(IntegrationTestMixin)
+class ScaffoldingTests {
 
 	static transactional = false
 
@@ -17,9 +20,7 @@ class ScaffoldingTests extends GroovyTestCase {
 	private File generateDir = new File(BuildSettingsHolder.settings.projectWorkDir, '_scaffolding_generate_')
 	private GrailsDomainClass domainClass
 
-	protected void setUp() {
-		super.setUp()
-
+	void setUp() {
 		generator.grailsApplication = grailsApplication
 		generator.pluginManager = pluginManager
 
@@ -28,9 +29,7 @@ class ScaffoldingTests extends GroovyTestCase {
 		domainClass = grailsApplication.getDomainClass(Thing.name)
 	}
 
-	@Override
-	protected void tearDown() {
-		super.tearDown()
+	void tearDown() {
 		generateDir.deleteDir()
 	}
 
