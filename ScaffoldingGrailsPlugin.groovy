@@ -27,6 +27,7 @@ import org.codehaus.groovy.grails.compiler.injection.NamedArtefactTypeAstTransfo
 import org.codehaus.groovy.grails.scaffolding.DefaultGrailsTemplateGenerator
 import org.codehaus.groovy.grails.scaffolding.GrailsTemplateGenerator
 import org.codehaus.groovy.grails.scaffolding.view.ScaffoldingViewResolver
+import org.codehaus.groovy.grails.web.pages.FastStringWriter
 import org.codehaus.groovy.grails.web.pages.GroovyPagesTemplateRenderer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -199,7 +200,7 @@ class ScaffoldingGrailsPlugin {
 	}
 
 	private String generateControllerSource(GrailsTemplateGenerator generator, GrailsDomainClass domainClass) {
-		def sw = new StringWriter()
+		def sw = new FastStringWriter()
 		log.info "Generating controller logic for scaffolding domain: {}", domainClass.fullName
 		generator.generateController domainClass, sw
 		return sw.toString()
