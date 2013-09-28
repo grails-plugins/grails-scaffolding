@@ -105,51 +105,6 @@ public class ScaffoldingViewResolver extends GrailsViewResolver {
 		return sw.toString();
 	}
 
-	private static class ViewKey {
-		private String controller;
-		private String view;
-        public ViewKey(String controller, String view) {
-            super();
-            this.controller = controller;
-            this.view = view;
-        }
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((controller == null) ? 0 : controller.hashCode());
-            result = prime * result + ((view == null) ? 0 : view.hashCode());
-            return result;
-        }
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            ViewKey other = (ViewKey)obj;
-            if (controller == null) {
-                if (other.controller != null)
-                    return false;
-            }
-            else if (!controller.equals(other.controller))
-                return false;
-            if (view == null) {
-                if (other.view != null)
-                    return false;
-            }
-            else if (!view.equals(other.view))
-                return false;
-            return true;
-        }
-        @Override
-        public String toString() {
-            return "ViewKey [controller=" + controller + ", view=" + view + "]";
-        }
-	}
-
 	public void setTemplateGenerator(GrailsTemplateGenerator templateGenerator) {
 		this.templateGenerator = templateGenerator;
 	}
