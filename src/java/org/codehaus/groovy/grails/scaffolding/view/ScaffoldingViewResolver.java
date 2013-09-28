@@ -45,7 +45,7 @@ public class ScaffoldingViewResolver extends GrailsViewResolver {
 	Map<String, List<String>> scaffoldedActionMap = Collections.emptyMap();
 	Map<String, GrailsDomainClass> scaffoldedDomains = Collections.emptyMap();
 
-	static final Map<ViewKey, View> scaffoldedViews = new ConcurrentHashMap<ViewKey, View>();
+	static final Map<String, View> scaffoldedViews = new ConcurrentHashMap<String, View>();
 	protected static final Log log = LogFactory.getLog(ScaffoldingViewResolver.class);
 
 	/**
@@ -57,35 +57,32 @@ public class ScaffoldingViewResolver extends GrailsViewResolver {
 
 	@Override
 	protected View createFallbackView(String viewName) throws Exception {
-		GrailsWebRequest webRequest = WebUtils.retrieveGrailsWebRequest();
-        final ViewKey viewKey = new ViewKey(webRequest.getControllerName(), webRequest.getActionName(), viewName);
-        View v = scaffoldedViews.get(viewKey);
+		GrailsWebRequest webRequest = GrailsWebRequest.lookup();
+        viewName = WebUtils.addViewPrefix(viewName, webRequest.getControllerName());
+        View v = scaffoldedViews.get(viewName);
         if (v == null) {
-    		List<String> controllerActions = scaffoldedActionMap.get(webRequest.getControllerName());
-    		if (controllerActions != null && controllerActions.contains(webRequest.getActionName())) {
-    			GrailsDomainClass domainClass = scaffoldedDomains.get(webRequest.getControllerName());
-    			if (domainClass != null) {
-    				String viewFileName;
-    				final int i = viewName.lastIndexOf('/');
-    				if (i > -1) {
-    					viewFileName = viewName.substring(i, viewName.length());
-    				}
-    				else {
-    					viewFileName = viewName;
-    				}
-					String viewCode = null;
-					try {
-						viewCode = generateViewSource(viewFileName, domainClass);
-					}
-					catch (Exception e) {
-						log.error("Error generating scaffolded view [" + viewName + "]: " + e.getMessage(),e);
-					}
-					if (StringUtils.hasLength(viewCode)) {
-						v = createScaffoldedView(viewName, viewCode);
-						scaffoldedViews.put(viewKey, v);
-					}
-    			}
-    		}
+			GrailsDomainClass domainClass = scaffoldedDomains.get(webRequest.getControllerName());
+			if (domainClass != null) {
+				String viewFileName;
+				final int i = viewName.lastIndexOf('/');
+				if (i > -1) {
+					viewFileName = viewName.substring(i, viewName.length());
+				}
+				else {
+					viewFileName = viewName;
+				}
+				String viewCode = null;
+				try {
+					viewCode = generateViewSource(viewFileName, domainClass);
+				}
+				catch (Exception e) {
+					log.error("Error generating scaffolded view [" + viewName + "]: " + e.getMessage(),e);
+				}
+				if (StringUtils.hasLength(viewCode)) {
+					v = createScaffoldedView(viewName, viewCode);
+					scaffoldedViews.put(viewName, v);
+				}
+			}
         }
         if (v != null) {
             return v;
@@ -110,19 +107,16 @@ public class ScaffoldingViewResolver extends GrailsViewResolver {
 
 	private static class ViewKey {
 		private String controller;
-		private String action;
 		private String view;
-        public ViewKey(String controller, String action, String view) {
+        public ViewKey(String controller, String view) {
             super();
             this.controller = controller;
-            this.action = action;
             this.view = view;
         }
         @Override
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((action == null) ? 0 : action.hashCode());
             result = prime * result + ((controller == null) ? 0 : controller.hashCode());
             result = prime * result + ((view == null) ? 0 : view.hashCode());
             return result;
@@ -136,12 +130,6 @@ public class ScaffoldingViewResolver extends GrailsViewResolver {
             if (getClass() != obj.getClass())
                 return false;
             ViewKey other = (ViewKey)obj;
-            if (action == null) {
-                if (other.action != null)
-                    return false;
-            }
-            else if (!action.equals(other.action))
-                return false;
             if (controller == null) {
                 if (other.controller != null)
                     return false;
@@ -158,7 +146,7 @@ public class ScaffoldingViewResolver extends GrailsViewResolver {
         }
         @Override
         public String toString() {
-            return "ViewKey [controller=" + controller + ", action=" + action + ", view=" + view + "]";
+            return "ViewKey [controller=" + controller + ", view=" + view + "]";
         }
 	}
 
