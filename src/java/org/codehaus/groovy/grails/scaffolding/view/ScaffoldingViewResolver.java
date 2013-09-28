@@ -16,10 +16,9 @@
 package org.codehaus.groovy.grails.scaffolding.view;
 
 import java.io.IOException;
-import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,9 +26,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.grails.commons.GrailsDomainClass;
 import org.codehaus.groovy.grails.scaffolding.GrailsTemplateGenerator;
+import org.codehaus.groovy.grails.web.pages.FastStringWriter;
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest;
 import org.codehaus.groovy.grails.web.servlet.view.GrailsViewResolver;
-import org.codehaus.groovy.grails.web.servlet.view.GroovyPageView;
 import org.codehaus.groovy.grails.web.util.WebUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.View;
@@ -57,47 +56,41 @@ public class ScaffoldingViewResolver extends GrailsViewResolver {
 	}
 
 	@Override
-	protected View loadView(String viewName, Locale locale) throws Exception {
-		final View resolvedView = super.loadView(viewName, locale);
-		if (templateGenerator == null || resolvedView instanceof GroovyPageView) {
-			return resolvedView;
-		}
-
+	protected View createFallbackView(String viewName) throws Exception {
 		GrailsWebRequest webRequest = WebUtils.retrieveGrailsWebRequest();
-		List<String> controllerActions = scaffoldedActionMap.get(webRequest.getControllerName());
-		if (controllerActions != null && controllerActions.contains(webRequest.getActionName())) {
-			GrailsDomainClass domainClass = scaffoldedDomains.get(webRequest.getControllerName());
-			if (domainClass != null) {
-				String viewFileName;
-				final int i = viewName.lastIndexOf('/');
-				if (i > -1) {
-					viewFileName = viewName.substring(i, viewName.length());
-				}
-				else {
-					viewFileName = viewName;
-				}
-				final ViewKey viewKey = new ViewKey(webRequest.getControllerName(), viewFileName);
-				View v = scaffoldedViews.get(viewKey);
-				if (v == null) {
+        final ViewKey viewKey = new ViewKey(webRequest.getControllerName(), webRequest.getActionName(), viewName);
+        View v = scaffoldedViews.get(viewKey);
+        if (v == null) {
+    		List<String> controllerActions = scaffoldedActionMap.get(webRequest.getControllerName());
+    		if (controllerActions != null && controllerActions.contains(webRequest.getActionName())) {
+    			GrailsDomainClass domainClass = scaffoldedDomains.get(webRequest.getControllerName());
+    			if (domainClass != null) {
+    				String viewFileName;
+    				final int i = viewName.lastIndexOf('/');
+    				if (i > -1) {
+    					viewFileName = viewName.substring(i, viewName.length());
+    				}
+    				else {
+    					viewFileName = viewName;
+    				}
 					String viewCode = null;
 					try {
 						viewCode = generateViewSource(viewFileName, domainClass);
 					}
 					catch (Exception e) {
 						log.error("Error generating scaffolded view [" + viewName + "]: " + e.getMessage(),e);
-						return resolvedView;
 					}
 					if (StringUtils.hasLength(viewCode)) {
 						v = createScaffoldedView(viewName, viewCode);
 						scaffoldedViews.put(viewKey, v);
 					}
-				}
-				if (v != null) {
-					return v;
-				}
-			}
-		}
-		return resolvedView;
+    			}
+    		}
+        }
+        if (v != null) {
+            return v;
+        }
+		return super.createFallbackView(viewName);
 	}
 
 	protected View createScaffoldedView(String viewName, String viewCode) throws Exception {
@@ -110,39 +103,63 @@ public class ScaffoldingViewResolver extends GrailsViewResolver {
 	}
 
 	protected String generateViewSource(String viewName, GrailsDomainClass domainClass) throws IOException {
-		StringWriter sw = new StringWriter();
+		Writer sw = new FastStringWriter();
 		templateGenerator.generateView(domainClass, viewName,sw);
 		return sw.toString();
 	}
 
-	private class ViewKey {
+	private static class ViewKey {
 		private String controller;
 		private String action;
-
-		ViewKey(String controller, String action) {
-			this.controller = controller;
-			this.action = action;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			ViewKey viewKey = (ViewKey) o;
-
-			if (action != null ? !action.equals(viewKey.action) : viewKey.action != null) return false;
-			if (!controller.equals(viewKey.controller)) return false;
-
-			return true;
-		}
-
-		@Override
-		public int hashCode() {
-			int result = controller.hashCode();
-			result = 31 * result + (action != null ? action.hashCode() : 0);
-			return result;
-		}
+		private String view;
+        public ViewKey(String controller, String action, String view) {
+            super();
+            this.controller = controller;
+            this.action = action;
+            this.view = view;
+        }
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((action == null) ? 0 : action.hashCode());
+            result = prime * result + ((controller == null) ? 0 : controller.hashCode());
+            result = prime * result + ((view == null) ? 0 : view.hashCode());
+            return result;
+        }
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            ViewKey other = (ViewKey)obj;
+            if (action == null) {
+                if (other.action != null)
+                    return false;
+            }
+            else if (!action.equals(other.action))
+                return false;
+            if (controller == null) {
+                if (other.controller != null)
+                    return false;
+            }
+            else if (!controller.equals(other.controller))
+                return false;
+            if (view == null) {
+                if (other.view != null)
+                    return false;
+            }
+            else if (!view.equals(other.view))
+                return false;
+            return true;
+        }
+        @Override
+        public String toString() {
+            return "ViewKey [controller=" + controller + ", action=" + action + ", view=" + view + "]";
+        }
 	}
 
 	public void setTemplateGenerator(GrailsTemplateGenerator templateGenerator) {
