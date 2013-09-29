@@ -58,22 +58,20 @@ public class ScaffoldingViewResolver extends GrailsViewResolver {
 	@Override
 	protected View createFallbackView(String viewName) throws Exception {
 		GrailsWebRequest webRequest = GrailsWebRequest.lookup();
-        viewName = WebUtils.addViewPrefix(viewName, webRequest.getControllerName());
-        View v = scaffoldedViews.get(viewName);
+		
+		String[] viewNameParts = splitViewName(viewName);
+		if(viewNameParts.length == 1) {
+		    viewName = WebUtils.addViewPrefix(viewName, webRequest.getControllerName());
+		    viewNameParts = splitViewName(viewName);
+		}
+
+		View v = scaffoldedViews.get(viewName);
         if (v == null) {
-			GrailsDomainClass domainClass = scaffoldedDomains.get(webRequest.getControllerName());
+			GrailsDomainClass domainClass = scaffoldedDomains.get(viewNameParts[0]);
 			if (domainClass != null) {
-				String viewFileName;
-				final int i = viewName.lastIndexOf('/');
-				if (i > -1) {
-					viewFileName = viewName.substring(i, viewName.length());
-				}
-				else {
-					viewFileName = viewName;
-				}
 				String viewCode = null;
 				try {
-					viewCode = generateViewSource(viewFileName, domainClass);
+					viewCode = generateViewSource(viewNameParts[1], domainClass);
 				}
 				catch (Exception e) {
 					log.error("Error generating scaffolded view [" + viewName + "]: " + e.getMessage(),e);
@@ -89,6 +87,10 @@ public class ScaffoldingViewResolver extends GrailsViewResolver {
         }
 		return super.createFallbackView(viewName);
 	}
+
+    protected String[] splitViewName(String viewName) {
+        return org.apache.commons.lang.StringUtils.split(viewName, '/');
+    }
 
 	protected View createScaffoldedView(String viewName, String viewCode) throws Exception {
 		final ScaffoldedGroovyPageView view = new ScaffoldedGroovyPageView(viewName, viewCode);
