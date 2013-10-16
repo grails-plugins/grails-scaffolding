@@ -92,7 +92,9 @@ class ${className}ControllerSpec extends Specification {
             controller.update(null)
 
         then:"A 404 error is returned"
-            status == 404
+            response.redirectedUrl == '/${propertyName}/index'
+            flash.message != null
+
 
         when:"An invalid domain instance is passed to the update action"
             response.reset()
@@ -120,7 +122,8 @@ class ${className}ControllerSpec extends Specification {
             controller.delete(null)
 
         then:"A 404 is returned"
-            status == 404
+            response.redirectedUrl == '/${propertyName}/index'
+            flash.message != null
 
         when:"A domain instance is created"
             response.reset()
