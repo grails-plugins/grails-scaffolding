@@ -14,6 +14,11 @@ class ${className}Controller {
     }
 
     def show(${className} ${propertyName}) {
+        if (${propertyName} == null) {
+            notFound()
+            return
+        }
+
         respond ${propertyName}
     }
 
