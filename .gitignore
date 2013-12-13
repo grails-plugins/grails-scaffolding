@@ -4,3 +4,6 @@
 target
 .settings
 web-app
+/.project
+/.classpath
+/target-eclipse

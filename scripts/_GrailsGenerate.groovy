@@ -30,6 +30,7 @@ includeTargets << grailsScript("_GrailsCreateArtifacts")
 generateForName = null
 generateViews = true
 generateController = true
+generateRestfulController = false
 generateAsyncController = false
 
 target(generateForOne: "Generates controllers and views for only one domain class.") {
@@ -92,12 +93,16 @@ void generateForDomainClass(domainClass) {
         templateGenerator.generateAsyncTest(domainClass, "${basedir}/test/unit")
         event("GenerateControllerEnd", [domainClass.fullName])
     }
+    else if (generateRestfulController) {
+        event("StatusUpdate", ["Generating controller for domain class ${domainClass.fullName}"])
+        templateGenerator.generateRestfulController(domainClass, basedir)
+        templateGenerator.generateRestfulTest(domainClass, "${basedir}/test/unit")
+        event("GenerateControllerEnd", [domainClass.fullName])
+    }
     else if (generateController) {
 		event("StatusUpdate", ["Generating controller for domain class ${domainClass.fullName}"])
 		templateGenerator.generateController(domainClass, basedir)
 		templateGenerator.generateTest(domainClass, "${basedir}/test/unit")
 		event("GenerateControllerEnd", [domainClass.fullName])
 	}
-
-
 }
