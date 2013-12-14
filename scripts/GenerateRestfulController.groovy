@@ -14,34 +14,26 @@
  * limitations under the License.
  */
 
-/**
- * Generates CRUD views for a given domain class
- *
- * @author Graeme Rocher
- *
- * @since 0.4
- */
-
 includeTargets << new File(scaffoldingPluginDir, 'scripts/_GrailsGenerate.groovy')
 
 target (generateRestfulController: "Generates the Restful controller for a specified domain class") {
-    depends(checkVersion, parseArguments, packageApp)
+	depends(checkVersion, parseArguments, packageApp)
 
-    promptForName(type: "Domain Class")
+	promptForName(type: "Domain Class")
 
-    generateViews = false
-    generateController = false
-    generateRestfulController = true
-    generateAsyncController = false
+	generateViews = false
+	generateController = false
+	generateRestfulController = true
+	generateAsyncController = false
 
-    String name = argsMap['params'][0]
-    if (!name || name == '*') {
-        uberGenerate()
-    }
-    else {
-        generateForName = name
-        generateForOne()
-    }
+	String name = argsMap['params'][0]
+	if (!name || name == '*') {
+		uberGenerate()
+	}
+	else {
+		generateForName = name
+		generateForOne()
+	}
 }
 
 USAGE = """

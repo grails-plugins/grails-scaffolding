@@ -58,7 +58,7 @@ public class ScaffoldingViewResolver extends GrailsViewResolver {
 	@Override
 	protected View createFallbackView(String viewName) throws Exception {
 		GrailsWebRequest webRequest = GrailsWebRequest.lookup();
-		
+
 		String[] viewNameParts = splitViewName(viewName);
 		if(viewNameParts.length == 1) {
 		    viewName = WebUtils.addViewPrefix(viewName, webRequest.getControllerName());

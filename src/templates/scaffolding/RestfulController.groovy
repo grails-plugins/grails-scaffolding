@@ -5,7 +5,7 @@ import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class ${className}Controller {
-    
+
     static responseFormats = ['json', 'xml']
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
