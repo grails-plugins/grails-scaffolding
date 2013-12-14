@@ -51,6 +51,13 @@ public interface GrailsTemplateGenerator {
 	void generateController(GrailsDomainClass domainClass, String destDir) throws IOException;
 
     /**
+     * Generates a Restful controller for the supplied domain class.
+     * @param domainClass The DomainClass to generate views for
+     * @param destDir The destination directory to generate views to
+     */
+    void generateRestfulController(GrailsDomainClass domainClass, String destDir) throws IOException;
+
+    /**
      * Generates a controller for the supplied domain class.
      * @param domainClass The DomainClass to generate views for
      * @param destDir The destination directory to generate views to
@@ -91,7 +98,27 @@ public interface GrailsTemplateGenerator {
 	 */
 	void generateController(GrailsDomainClass domainClass, Writer out) throws IOException;
 
+    /**
+     * Generates a controller unit test for the specified domain class.
+     *
+     * @param domainClass The domain class
+     * @param destDir The destination
+     */
 	void generateTest(GrailsDomainClass domainClass, String destDir) throws IOException;
 
+    /**
+     * Generates a controller unit test for the specified domain class.
+     *
+     * @param domainClass The domain class
+     * @param destDir The destination
+     */
+    void generateRestfulTest(GrailsDomainClass domainClass, String destDir) throws IOException;
+    
+    /**
+     * Generates a controller unit test for the specified domain class.
+     *
+     * @param domainClass The domain class
+     * @param destDir The destination
+     */
     void generateAsyncTest(GrailsDomainClass domainClass, String destDir) throws IOException;
 }

@@ -63,6 +63,12 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 	protected String domainSuffix = "";
 	protected GrailsPluginManager pluginManager;
 	protected GrailsApplication grailsApplication;
+	
+	protected enum GrailsControllerType {
+	    DEFAULT,
+	    RESTFUL,
+	    ASYNC
+	}
 
 	protected AbstractGrailsTemplateGenerator(ClassLoader classLoader) {
 		engine = new SimpleTemplateEngine(classLoader);
@@ -83,44 +89,7 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 		}
 	}
 
-	public void generateController(GrailsDomainClass domainClass, String destDir) throws IOException {
-		Assert.hasText(destDir, "Argument [destdir] not specified");
-
-		if (domainClass == null) {
-			return;
-		}
-
-		String fullName = domainClass.getFullName();
-		String pkg = "";
-		int pos = fullName.lastIndexOf('.');
-		if (pos != -1) {
-			// Package name with trailing '.'
-			pkg = fullName.substring(0, pos + 1);
-		}
-
-		File destFile = new File(destDir, "grails-app/controllers/" + pkg.replace('.', '/') + domainClass.getShortName() + "Controller.groovy");
-		if (canWrite(destFile)) {
-			destFile.getParentFile().mkdirs();
-
-			BufferedWriter writer = null;
-			try {
-				writer = new BufferedWriter(new FileWriter(destFile));
-				generateController(domainClass, writer);
-				try {
-					writer.flush();
-				}
-				catch (IOException ignored) {}
-			}
-			finally {
-				IOGroovyMethods.closeQuietly(writer);
-			}
-
-			log.info("Controller generated at ["+destFile+"]");
-		}
-	}
-
-    @Override
-    public void generateAsyncController(GrailsDomainClass domainClass, String destDir) throws IOException {
+    public void generateController(GrailsControllerType controllerType, GrailsDomainClass domainClass, String destDir) throws IOException {
         Assert.hasText(destDir, "Argument [destdir] not specified");
 
         if (domainClass == null) {
@@ -135,25 +104,41 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
             pkg = fullName.substring(0, pos + 1);
         }
 
-        File destFile = new File(destDir, "grails-app/controllers/" + pkg.replace('.', '/') + domainClass.getShortName() + "Controller.groovy");
+        File destFile = new File(destDir, "grails-app/controllers/"
+                + pkg.replace('.', '/') + domainClass.getShortName()
+                + "Controller.groovy");
         if (canWrite(destFile)) {
             destFile.getParentFile().mkdirs();
 
             BufferedWriter writer = null;
             try {
                 writer = new BufferedWriter(new FileWriter(destFile));
-                generateAsyncController(domainClass, writer);
+                generateController(controllerType, domainClass, writer);
                 try {
                     writer.flush();
+                } catch (IOException ignored) {
                 }
-                catch (IOException ignored) {}
-            }
-            finally {
+            } finally {
                 IOGroovyMethods.closeQuietly(writer);
             }
 
-            log.info("Controller generated at ["+destFile+"]");
+            log.info("Controller generated at [" + destFile + "]");
         }
+    }
+
+    @Override
+	public void generateController(GrailsDomainClass domainClass, String destDir) throws IOException {
+        generateController(GrailsControllerType.DEFAULT, domainClass, destDir);
+	}
+
+    @Override
+    public void generateRestfulController(GrailsDomainClass domainClass, String destDir) throws IOException {
+        generateController(GrailsControllerType.RESTFUL, domainClass, destDir);
+    }
+    
+    @Override
+    public void generateAsyncController(GrailsDomainClass domainClass, String destDir) throws IOException {
+        generateController(GrailsControllerType.ASYNC, domainClass, destDir);
     }
 
     public void generateView(GrailsDomainClass domainClass, String viewName, Writer out) throws IOException {
@@ -182,7 +167,8 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 
 	protected abstract Object getRenderEditor();
 
-	public void generateView(GrailsDomainClass domainClass, String viewName, String destDir) throws IOException {
+    @Override
+    public void generateView(GrailsDomainClass domainClass, String viewName, String destDir) throws IOException {
 		File destFile = new File(destDir, viewName + ".gsp");
 		if (!canWrite(destFile)) {
 			return;
@@ -202,18 +188,24 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 		}
 	}
 
-	public void generateController(GrailsDomainClass domainClass, Writer out) throws IOException {
-		String templateText = getTemplateText("Controller.groovy");
+    @Override
+    public void generateController(GrailsDomainClass domainClass, Writer out) throws IOException {
+        generateController(GrailsControllerType.DEFAULT, domainClass, out);
+    }
 
-		Map<String, Object> binding = createBinding(domainClass);
-		binding.put("packageName", domainClass.getPackageName());
-		binding.put("propertyName", getPropertyName(domainClass));
-
-		generate(templateText, binding, out);
-	}
-
-    public void generateAsyncController(GrailsDomainClass domainClass, Writer out) throws IOException {
-        String templateText = getTemplateText("AsyncController.groovy");
+    protected void generateController(GrailsControllerType controllerType, GrailsDomainClass domainClass, Writer out) throws IOException {
+        String templateText = null;
+        switch (controllerType) {
+        case DEFAULT:
+            templateText = getTemplateText("Controller.groovy");
+            break;
+        case RESTFUL:
+            templateText = getTemplateText("RestfulController.groovy");
+            break;
+        case ASYNC:
+            templateText = getTemplateText("AsyncController.groovy");
+            break;            
+        }        
 
         Map<String, Object> binding = createBinding(domainClass);
         binding.put("packageName", domainClass.getPackageName());
@@ -223,10 +215,16 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
     }
 
     @Override
+    public void generateRestfulTest(GrailsDomainClass domainClass, String destDir) throws IOException {
+        generateTest(domainClass, destDir, "RestfulSpec.groovy");
+    }
+
+    @Override
     public void generateAsyncTest(GrailsDomainClass domainClass, String destDir) throws IOException {
         generateTest(domainClass, destDir, "AsyncSpec.groovy");
     }
 
+    @Override
 	public void generateTest(GrailsDomainClass domainClass, String destDir) throws IOException {
         generateTest(domainClass, destDir, "Spec.groovy");
 	}
