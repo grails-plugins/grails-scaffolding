@@ -17,7 +17,7 @@ class ${className}Controller {
         }
     }
 
-    def show(Long id) {
+    def show(String id) {
         ${className}.async.get(id).then { ${propertyName} ->
             respond ${propertyName}
         }
@@ -50,13 +50,13 @@ class ${className}Controller {
         }
     }
 
-    def edit(Long id) {
+    def edit(String id) {
         ${className}.async.get(id).then { ${propertyName} ->
             respond ${propertyName}
         }
     }
 
-    def update(Long id) {
+    def update(String id) {
         ${className}.async.withTransaction {
             def ${propertyName} = ${className}.get(id)
             if (${propertyName} == null) {
@@ -80,7 +80,7 @@ class ${className}Controller {
         }
     }
 
-    def delete(Long id) {
+    def delete(String id) {
         ${className}.async.withTransaction {
             def ${propertyName} = ${className}.get(id)
             if (${propertyName} == null) {
