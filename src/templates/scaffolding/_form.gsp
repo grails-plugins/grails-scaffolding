@@ -29,14 +29,12 @@
 
 private renderFieldForProperty(p, owningClass, prefix = "") {
 	boolean hasHibernate = pluginManager?.hasGrailsPlugin('hibernate') || pluginManager?.hasGrailsPlugin('hibernate4')
-	boolean display = true
 	boolean required = false
 	if (hasHibernate) {
 		cp = owningClass.constrainedProperties[p.name]
-		display = (cp ? cp.display : true)
 		required = (cp ? !(cp.propertyType in [boolean, Boolean]) && !cp.nullable && (cp.propertyType != String || !cp.blank) : false)
 	}
-	if (display) { %>
+	%>
 <div class="fieldcontain \${hasErrors(bean: ${propertyName}, field: '${prefix}${p.name}', 'error')} ${required ? 'required' : ''}">
 	<label for="${prefix}${p.name}">
 		<g:message code="${domainClass.propertyName}.${prefix}${p.name}.label" default="${p.naturalName}" />
@@ -44,4 +42,4 @@ private renderFieldForProperty(p, owningClass, prefix = "") {
 	</label>
 	${renderEditor(p)}
 </div>
-<%  }   } %>
+<%  } %>
