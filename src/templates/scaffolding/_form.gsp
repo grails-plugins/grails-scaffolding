@@ -34,7 +34,7 @@ private renderFieldForProperty(p, owningClass, prefix = "") {
 	if (hasHibernate) {
 		cp = owningClass.constrainedProperties[p.name]
 		display = (cp ? cp.display : true)
-		required = (cp ? !(cp.propertyType in [boolean, Boolean]) && !cp.nullable && (cp.propertyType != String || !cp.blank) : false)
+		required = (cp ? !(cp.propertyType in [boolean, Boolean]) && !cp.nullable : false)
 	}
 	if (display) { %>
 <div class="fieldcontain \${hasErrors(bean: ${propertyName}, field: '${prefix}${p.name}', 'error')} ${required ? 'required' : ''}">
