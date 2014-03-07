@@ -267,7 +267,7 @@
 	        return false
 	    }
 	    else {
-	        cp.nullable || (cp.propertyType == String && cp.blank) || cp.propertyType in [boolean, Boolean]
+	        cp.nullable || cp.propertyType in [boolean, Boolean]
 	    }
 	}
 %>
