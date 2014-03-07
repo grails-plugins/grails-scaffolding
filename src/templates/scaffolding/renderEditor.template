@@ -38,7 +38,7 @@
  		sb << ' keys="${' << property.type.name << '.values()*.name()}"'
 		if (isRequired()) sb << ' required=""'
 		sb << ' value="${' << "${domainInstance}?.${property.name}?.name()" << '}" '
-                cp.attributes.each { k, v ->
+                cp?.attributes?.each { k, v ->
                     sb << "${k}=\"${v}\" "
                 }
 		sb << renderNoSelection(property)
