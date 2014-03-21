@@ -14,7 +14,10 @@ class ${className}Controller {
     }
 
     def show(${className} ${propertyName}) {
-        respond ${propertyName}
+        if(${propertyName} == null || !${propertyName}.isAttached()) {
+            notFound()
+        }
+		respond ${propertyName}
     }
 
     def create() {
@@ -45,7 +48,10 @@ class ${className}Controller {
     }
 
     def edit(${className} ${propertyName}) {
-        respond ${propertyName}
+        if(${propertyName} == null || !${propertyName}.isAttached()) {
+            notFound()
+        }
+		respond ${propertyName}
     }
 
     @Transactional
