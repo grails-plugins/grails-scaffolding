@@ -15,6 +15,7 @@
  */
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
+import java.util.concurrent.ConcurrentHashMap
 
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer
@@ -59,9 +60,9 @@ class ScaffoldingGrailsPlugin {
 	def doWithSpring = {
 		ScaffoldingViewResolver.clearViewCache()
 
-		scaffoldedActionMap(HashMap)
+		scaffoldedActionMap(ConcurrentHashMap)
 
-		controllerToScaffoldedDomainClassMap(HashMap)
+		controllerToScaffoldedDomainClassMap(ConcurrentHashMap)
 
 		scaffoldingTemplateGenerator(DefaultGrailsTemplateGenerator, ref("classLoader")) {
 			grailsApplication = ref("grailsApplication")
