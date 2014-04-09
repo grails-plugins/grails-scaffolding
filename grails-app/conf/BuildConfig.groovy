@@ -12,7 +12,7 @@ grails.project.dependency.resolution = {
 	}
 
     dependencies {
-        test "org.grails:grails-datastore-gorm-hibernate:2.0.1.RELEASE"
+        test "org.grails:grails-datastore-gorm-hibernate:3.0.5.RELEASE"
     }
 
 	plugins {
