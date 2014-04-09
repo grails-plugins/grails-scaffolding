@@ -38,8 +38,8 @@ class ScaffoldingGrailsPlugin {
 
 	private Logger log = LoggerFactory.getLogger(getClass())
 
-	String version = '2.0.3'
-	String grailsVersion = '2.3.6 > *'
+	String version = '2.1.0-SNAPSHOT'
+	String grailsVersion = '2.4.0 > *'
 	def pluginExcludes = ['grails-app/domain/**', 'grails-app/conf/UrlMappings.groovy', 'grails-app/i18n/**']
 
 	String title = 'Grails Scaffolding Plugin'
