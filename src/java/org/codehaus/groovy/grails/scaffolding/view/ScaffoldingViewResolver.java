@@ -28,7 +28,7 @@ import org.codehaus.groovy.grails.commons.GrailsDomainClass;
 import org.codehaus.groovy.grails.scaffolding.GrailsTemplateGenerator;
 import org.codehaus.groovy.grails.web.pages.FastStringWriter;
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest;
-import org.codehaus.groovy.grails.web.servlet.view.GrailsViewResolver;
+import org.codehaus.groovy.grails.web.servlet.view.GroovyPageViewResolver;
 import org.codehaus.groovy.grails.web.util.WebUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.View;
@@ -39,7 +39,7 @@ import org.springframework.web.servlet.View;
  * @author Graeme Rocher
  * @since 1.1
  */
-public class ScaffoldingViewResolver extends GrailsViewResolver {
+public class ScaffoldingViewResolver extends GroovyPageViewResolver {
 
 	GrailsTemplateGenerator templateGenerator;
 	Map<String, List<String>> scaffoldedActionMap = Collections.emptyMap();

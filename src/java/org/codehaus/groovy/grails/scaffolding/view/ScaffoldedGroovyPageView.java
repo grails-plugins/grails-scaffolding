@@ -15,10 +15,7 @@
  */
 package org.codehaus.groovy.grails.scaffolding.view;
 
-import groovy.lang.Writable;
-
 import java.io.IOException;
-import java.io.Writer;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.grails.web.pages.GroovyPageTemplate;
-import org.codehaus.groovy.grails.web.pages.GroovyPagesTemplateEngine;
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest;
 import org.codehaus.groovy.grails.web.servlet.view.GroovyPageView;
-import org.codehaus.groovy.grails.web.sitemesh.GrailsLayoutDecoratorMapper;
 import org.springframework.util.Assert;
 
 /**
@@ -65,36 +61,16 @@ public class ScaffoldedGroovyPageView extends GroovyPageView {
 	 * Overrides the default implementation to render a GSP view using an in-memory representation
 	 * held in the #contents property.
 	 *
-	 * @param templateEngine The GroovyPagesTemplateEngine instance
 	 * @param model The model
 	 * @param response The HttpServletResponse instance
-	 *
-	 * @throws IOException Thrown if there was an IO error rendering the view
 	 */
-	@SuppressWarnings("rawtypes")
-	@Override
-	protected void renderWithTemplateEngine(GroovyPagesTemplateEngine templateEngine, Map model,
-			HttpServletResponse response, HttpServletRequest request) throws IOException {
-
+    @Override
+    protected void renderTemplate(Map<String, Object> model, GrailsWebRequest webRequest, HttpServletRequest request,
+            HttpServletResponse response) {
 		if (log.isDebugEnabled()) {
 			log.debug("Rendering scaffolded view [" + getUrl() + "] with model [" + model + "]");
 		}
-
-		request.setAttribute(GrailsLayoutDecoratorMapper.RENDERING_VIEW, true);
-		Writable w = template.make(model);
-		Writer out = null;
-		try {
-			out = createResponseWriter(response);
-			w.writeTo(out);
-		}
-		catch(Exception e) {
-			handleException(e, templateEngine);
-		}
-		finally {
-			if (out != null) {
-				out.close();
-			}
-		}
+		super.renderTemplate(model, webRequest, request, response);
 	}
 
 	@Override
