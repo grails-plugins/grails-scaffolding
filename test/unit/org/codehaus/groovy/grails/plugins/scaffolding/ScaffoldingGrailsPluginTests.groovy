@@ -1,5 +1,6 @@
 package org.codehaus.groovy.grails.plugins.scaffolding
 
+import grails.test.mixin.*
 import grails.util.Metadata
 
 import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
@@ -8,9 +9,7 @@ import org.codehaus.groovy.grails.commons.spring.GrailsRuntimeConfigurator
 import org.codehaus.groovy.grails.commons.spring.WebRuntimeSpringConfiguration
 import org.codehaus.groovy.grails.plugins.DefaultGrailsPlugin
 import org.codehaus.groovy.grails.plugins.MockGrailsPluginManager
-import org.codehaus.groovy.grails.plugins.PluginMetaManager
 import org.codehaus.groovy.grails.support.MockApplicationContext
-import org.springframework.core.io.Resource
 import org.springframework.mock.web.MockServletContext
 
 class ScaffoldingGrailsPluginTests extends GroovyTestCase {
@@ -71,7 +70,6 @@ class TestTagLib {
 
 		def mockManager = new MockGrailsPluginManager()
 		ctx.registerMockBean('pluginManager', mockManager)
-		ctx.registerMockBean(PluginMetaManager.BEAN_ID, new org.codehaus.groovy.grails.plugins.DefaultPluginMetaManager([] as Resource[]))
 
 		def dependantPluginClasses = []
 		dependantPluginClasses << gcl.loadClass('org.codehaus.groovy.grails.plugins.CoreGrailsPlugin')
