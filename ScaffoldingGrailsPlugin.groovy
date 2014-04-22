@@ -39,7 +39,7 @@ class ScaffoldingGrailsPlugin {
 
 	private Logger log = LoggerFactory.getLogger(getClass())
 
-	String version = '2.1.0-SNAPSHOT'
+	String version = '2.1.0'
 	String grailsVersion = '2.4.0 > *'
 	def pluginExcludes = ['grails-app/domain/**', 'grails-app/conf/UrlMappings.groovy', 'grails-app/i18n/**']
 
@@ -55,7 +55,7 @@ class ScaffoldingGrailsPlugin {
 	String license = 'APACHE'
 	def issueManagement = [system: 'JIRA', url: 'http://jira.grails.org/browse/GPSCAFFOLD']
 	def scm = [url: 'https://github.com/grails-plugins/grails-scaffolding']
-	def organization = [name: 'SpringSource', url: 'http://www.springsource.org/']
+	def organization = [name: 'Pivotal', url: 'http://www.gopivotal.com/oss']
 
 	def doWithSpring = {
 		ScaffoldingViewResolver.clearViewCache()
