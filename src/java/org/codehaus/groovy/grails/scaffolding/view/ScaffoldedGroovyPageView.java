@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.grails.web.pages.GroovyPageTemplate;
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest;
 import org.codehaus.groovy.grails.web.servlet.view.GroovyPageView;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.util.Assert;
 
 /**
@@ -75,7 +76,8 @@ public class ScaffoldedGroovyPageView extends GroovyPageView {
 
 	@Override
 	protected void initTemplate() throws IOException {
-		template = templateEngine.createTemplate(contents, getUrl());
+		String pageName = getUrl();
+		template = templateEngine.createTemplate(new ByteArrayResource(contents.getBytes("UTF-8"), pageName), false);
 		if (template instanceof GroovyPageTemplate) {
 			((GroovyPageTemplate)template).setAllowSettingContentType(true);
 		}
