@@ -40,6 +40,7 @@ import org.codehaus.groovy.grails.plugins.GrailsPluginInfo;
 import org.codehaus.groovy.grails.plugins.GrailsPluginManager;
 import org.codehaus.groovy.grails.plugins.GrailsPluginUtils;
 import org.codehaus.groovy.grails.plugins.PluginManagerAware;
+import org.codehaus.groovy.grails.validation.DomainClassPropertyComparator;
 import org.codehaus.groovy.runtime.IOGroovyMethods;
 import org.codehaus.groovy.runtime.StringGroovyMethods;
 import org.springframework.context.ResourceLoaderAware;
@@ -259,14 +260,12 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 
 	@SuppressWarnings("deprecation")
 	protected Map<String, Object> createBinding(GrailsDomainClass domainClass) {
-		boolean hasHibernate = pluginManager.hasGrailsPlugin("hibernate") || pluginManager.hasGrailsPlugin("hibernate4");
-
 		Map<String, Object> binding = new HashMap<String, Object>();
 		binding.put("pluginManager", pluginManager);
 		binding.put("domainClass", domainClass);
 		binding.put("className", domainClass.getShortName());
 		binding.put("renderEditor", getRenderEditor());
-		binding.put("comparator", hasHibernate ? DomainClassPropertyComparator.class : SimpleDomainClassPropertyComparator.class);
+		binding.put("comparator", DomainClassPropertyComparator.class);
 		return binding;
 	}
 
