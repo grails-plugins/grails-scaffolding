@@ -162,6 +162,7 @@ public abstract class AbstractGrailsTemplateGenerator implements GrailsTemplateG
 		binding.put("packageName", packageName);
 		binding.put("multiPart", multiPart);
 		binding.put("propertyName", getPropertyName(domainClass));
+		binding.put("grailsApplication", grailsApplication);
 
 		generate(templateText, binding, out);
 	}
