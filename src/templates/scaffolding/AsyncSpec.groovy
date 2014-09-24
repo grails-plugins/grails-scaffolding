@@ -117,7 +117,8 @@ class ${className}ControllerSpec extends Specification {
             populateValidParams(params)
             controller.update(${propertyName}.id).get()
 
-        then:"A redirect is issues to the show action"
+        then:"A redirect is issued to the show action"
+            ${propertyName} != null
             response.redirectedUrl == "/${propertyName}/show/\$${propertyName}.id"
             flash.message != null
     }

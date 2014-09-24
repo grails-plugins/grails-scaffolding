@@ -99,7 +99,6 @@ class ${className}ControllerSpec extends Specification {
             response.redirectedUrl == '/${propertyName}/index'
             flash.message != null
 
-
         when:"An invalid domain instance is passed to the update action"
             response.reset()
             def ${propertyName} = new ${className}()
@@ -116,7 +115,8 @@ class ${className}ControllerSpec extends Specification {
             ${propertyName} = new ${className}(params).save(flush: true)
             controller.update(${propertyName})
 
-        then:"A redirect is issues to the show action"
+        then:"A redirect is issued to the show action"
+            ${propertyName} != null
             response.redirectedUrl == "/${propertyName}/show/\$${propertyName}.id"
             flash.message != null
     }
