@@ -24,11 +24,13 @@ class ${className}Controller {
     @Transactional
     def save(${className} ${propertyName}) {
         if (${propertyName} == null) {
+            transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
         if (${propertyName}.hasErrors()) {
+            transactionStatus.setRollbackOnly()
             respond ${propertyName}.errors, view:'create'
             return
         }
@@ -51,11 +53,13 @@ class ${className}Controller {
     @Transactional
     def update(${className} ${propertyName}) {
         if (${propertyName} == null) {
+            transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
         if (${propertyName}.hasErrors()) {
+            transactionStatus.setRollbackOnly()
             respond ${propertyName}.errors, view:'edit'
             return
         }
@@ -75,6 +79,7 @@ class ${className}Controller {
     def delete(${className} ${propertyName}) {
 
         if (${propertyName} == null) {
+            transactionStatus.setRollbackOnly()
             notFound()
             return
         }

@@ -17,12 +17,14 @@ class ${className}Controller {
     @Transactional
     def save(${className} ${propertyName}) {
         if (${propertyName} == null) {
+            transactionStatus.setRollbackOnly()
             render status: NOT_FOUND
             return
         }
 
         ${propertyName}.validate()
         if (${propertyName}.hasErrors()) {
+            transactionStatus.setRollbackOnly()
             render status: NOT_ACCEPTABLE
             return
         }
@@ -34,12 +36,14 @@ class ${className}Controller {
     @Transactional
     def update(${className} ${propertyName}) {
         if (${propertyName} == null) {
+            transactionStatus.setRollbackOnly()
             render status: NOT_FOUND
             return
         }
 
         ${propertyName}.validate()
         if (${propertyName}.hasErrors()) {
+            transactionStatus.setRollbackOnly()
             render status: NOT_ACCEPTABLE
             return
         }
@@ -52,6 +56,7 @@ class ${className}Controller {
     def delete(${className} ${propertyName}) {
 
         if (${propertyName} == null) {
+            transactionStatus.setRollbackOnly()
             render status: NOT_FOUND
             return
         }

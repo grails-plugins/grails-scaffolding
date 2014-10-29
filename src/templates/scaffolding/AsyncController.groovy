@@ -2,6 +2,7 @@
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
+import org.springframework.transaction.TransactionStatus
 
 @Transactional(readOnly = true)
 class ${className}Controller {
@@ -28,13 +29,15 @@ class ${className}Controller {
     }
 
     def save(${className} ${propertyName}) {
-        ${className}.async.withTransaction {
+        ${className}.async.withTransaction { TransactionStatus status ->
             if (${propertyName} == null) {
+                status.setRollbackOnly()
                 notFound()
                 return
             }
 
             if(${propertyName}.hasErrors()) {
+                status.setRollbackOnly()
                 respond ${propertyName}.errors, view:'create' // STATUS CODE 422
                 return
             }
@@ -57,15 +60,17 @@ class ${className}Controller {
     }
 
     def update(String id) {
-        ${className}.async.withTransaction {
+        ${className}.async.withTransaction { TransactionStatus status ->
             def ${propertyName} = ${className}.get(id)
             if (${propertyName} == null) {
+                status.setRollbackOnly()
                 notFound()
                 return
             }
 
             ${propertyName}.properties = params
             if( !${propertyName}.save(flush:true) ) {
+                status.setRollbackOnly()
                 respond ${propertyName}.errors, view:'edit' // STATUS CODE 422
                 return
             }
@@ -81,9 +86,10 @@ class ${className}Controller {
     }
 
     def delete(String id) {
-        ${className}.async.withTransaction {
+        ${className}.async.withTransaction { TransactionStatus status ->
             def ${propertyName} = ${className}.get(id)
             if (${propertyName} == null) {
+                status.setRollbackOnly()
                 notFound()
                 return
             }
