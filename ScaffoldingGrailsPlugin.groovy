@@ -126,8 +126,9 @@ class ScaffoldingGrailsPlugin {
 		GrailsDomainClass domainClass = getScaffoldedDomainClass(application, controllerClass, scaffoldProperty)
 		scaffoldedActionMap[controllerClass.logicalPropertyName] = []
 		if (!domainClass) {
-			log.error "Cannot generate controller logic for scaffolded class {}. It is not a domain class!", scaffoldProperty
-			return
+		    scaffoldProperty = (scaffoldProperty == true) ? controllerClass.logicalPropertyName.capitalize() : scaffoldProperty
+		    log.error "Cannot generate controller logic for scaffolded class {} in controller {}. It is not a domain class!", scaffoldProperty, controllerClass.fullName
+  			return
 		}
 
 		GrailsTemplateGenerator generator = ctx.scaffoldingTemplateGenerator
