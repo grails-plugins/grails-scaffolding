@@ -19,12 +19,12 @@
 			Collections.sort(embeddedProps, comparator.constructors[0].newInstance([p.component] as Object[]))
 			%><fieldset class="embedded"><legend><g:message code="${domainClass.propertyName}.${p.name}.label" default="${p.naturalName}" /></legend><%
 				for (ep in p.component.properties) {
-					if (ep.name != 'id') {
+					if (ep.name != 'id' && ! (Collection.class.isAssignableFrom(ep.type) && ! ep.referencedDomainClass)) {
 						renderFieldForProperty(ep, p.component, "${p.name}.")
 					}
 				}
 			%></fieldset><%
-		} else {
+        } else {
 			renderFieldForProperty(p, domainClass)
 		}
 	}

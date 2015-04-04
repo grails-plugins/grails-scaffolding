@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import grails.util.Holders
+
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.util.concurrent.ConcurrentHashMap
@@ -64,9 +67,16 @@ class ScaffoldingGrailsPlugin {
 
 		controllerToScaffoldedDomainClassMap(ConcurrentHashMap)
 
-		scaffoldingTemplateGenerator(DefaultGrailsTemplateGenerator, ref("classLoader")) {
-			grailsApplication = ref("grailsApplication")
-		}
+        def customGeneratorClass = Holders.config.grails.plugin.scaffolding.customTemplateGenerator
+        if (customGeneratorClass) {
+            scaffoldingTemplateGenerator(customGeneratorClass, ref("classLoader")) {
+                grailsApplication = ref("grailsApplication")
+            }
+        } else {
+            scaffoldingTemplateGenerator(DefaultGrailsTemplateGenerator, ref("classLoader")) {
+                grailsApplication = ref("grailsApplication")
+            }
+        }
 
 		jspViewResolver(ScaffoldingViewResolver) { bean ->
 			bean.lazyInit = true
