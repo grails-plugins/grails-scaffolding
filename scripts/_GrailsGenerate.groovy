@@ -15,7 +15,6 @@
  */
 
 import grails.util.GrailsNameUtils
-import grails.util.Holders
 
 /**
  * Generates a CRUD controller and matching views for a given domain class
