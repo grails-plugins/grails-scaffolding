@@ -28,7 +28,7 @@
 						props = domainClass.properties.findAll { allowedNames.contains(it.name) && !excludedProps.contains(it.name) && it.type != null && !Collection.isAssignableFrom(it.type) && (domainClass.constrainedProperties[it.name] ? domainClass.constrainedProperties[it.name].display : true) }
 						Collections.sort(props, comparator.constructors[0].newInstance([domainClass] as Object[]))
 						props.eachWithIndex { p, i ->
-							if (i < 6) {
+							if (i < (grailsApplication.config?.grails?.plugin?.scaffolding?.properties?.max?.toString().isNumber() ? grailsApplication.config?.grails?.plugin?.scaffolding?.properties?.max : 6)) {
 								if (p.isAssociation()) { %>
 						<th><g:message code="${domainClass.propertyName}.${p.name}.label" default="${p.naturalName}" /></th>
 					<%      } else { %>
@@ -42,7 +42,7 @@
 					<%  props.eachWithIndex { p, i ->
 							if (i == 0) { %>
 						<td><g:link action="show" id="\${${propertyName}.id}">\${fieldValue(bean: ${propertyName}, field: "${p.name}")}</g:link></td>
-					<%      } else if (i < 6) {
+					<%      } else if (i < (grailsApplication.config?.grails?.plugin?.scaffolding?.properties?.max?.toString().isNumber() ? grailsApplication.config?.grails?.plugin?.scaffolding?.properties?.max : 6)) {
 								if (p.type == Boolean || p.type == boolean) { %>
 						<td><g:formatBoolean boolean="\${${propertyName}.${p.name}}" /></td>
 					<%          } else if (p.type == Date || p.type == java.sql.Date || p.type == java.sql.Time || p.type == Calendar) { %>
