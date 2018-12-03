@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import grails.util.Holders
-
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.util.concurrent.ConcurrentHashMap
@@ -67,8 +65,9 @@ class ScaffoldingGrailsPlugin {
 
 		controllerToScaffoldedDomainClassMap(ConcurrentHashMap)
 
-        def customGeneratorClass = Holders.config.grails.plugin.scaffolding.customTemplateGenerator
+        def customGeneratorClass = application.config.grails.plugin.scaffolding.customTemplateGenerator
         if (customGeneratorClass) {
+			println "Using custom template generator: ${customGeneratorClass}"
             scaffoldingTemplateGenerator(customGeneratorClass, ref("classLoader")) {
                 grailsApplication = ref("grailsApplication")
             }

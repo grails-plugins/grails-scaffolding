@@ -15,7 +15,6 @@
  */
 
 import grails.util.GrailsNameUtils
-import grails.util.Holders
 
 /**
  * Generates a CRUD controller and matching views for a given domain class
@@ -25,8 +24,10 @@ import grails.util.Holders
  * @since 0.4
  */
 
+includeTargets << grailsScript("_GrailsInit")
 includeTargets << grailsScript("_GrailsBootstrap")
 includeTargets << grailsScript("_GrailsCreateArtifacts")
+
 
 generateForName = null
 generateViews = true
@@ -77,8 +78,10 @@ target(uberGenerate: "Generates controllers and views for all domain classes.") 
 }
 
 void generateForDomainClass(domainClass) {
-    def templateGeneratorClass = Holders.config.grails.plugin.scaffolding.customTemplateGenerator
-    if (! templateGeneratorClass) {
+    def templateGeneratorClass = config.grails.plugin.scaffolding.customTemplateGenerator
+    if (templateGeneratorClass) {
+		println "Using custom template generator: ${templateGeneratorClass}"
+	} else {
         templateGeneratorClass = classLoader.loadClass('org.codehaus.groovy.grails.scaffolding.DefaultGrailsTemplateGenerator')
     }
 
